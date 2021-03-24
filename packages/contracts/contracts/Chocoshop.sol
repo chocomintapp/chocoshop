@@ -17,6 +17,16 @@ contract Chocoshop is IERC721Receiver {
         uint256 updatedAt;
     }
 
+    event Purchased(
+        address indexed nftContractAddress,
+        address indexed from,
+        address buyer,
+        uint256 indexed tokenId,
+        uint256 price
+    );
+    event Canceled(address indexed nftContractAddress, address indexed from, uint256 indexed tokenId, uint256 price);
+    event OnSale(address indexed nftContractAddress, address indexed from, uint256 indexed tokenId, uint256 price);
+
     mapping(address => Sale[]) _salesMemory;
     mapping(address => mapping(uint256 => uint256)) private _salesIndex;
     mapping(address => mapping(uint256 => bool)) private _salesExists;
@@ -42,6 +52,7 @@ contract Chocoshop is IERC721Receiver {
         _removeFromSaleList(_nftContractAddress, _tokenId);
         IERC721(_nftContractAddress).transferFrom(address(this), msg.sender, _tokenId);
         sale.from.transfer(sale.price);
+        emit Purchased(sale.nftContractAddress, sale.from, msg.sender, sale.tokenId, sale.price);
     }
 
     function cancel(address _nftContractAddress, uint256 _tokenId) public {
@@ -50,6 +61,7 @@ contract Chocoshop is IERC721Receiver {
         require(sale.from == msg.sender, "invalid msg sender");
         IERC721(_nftContractAddress).transferFrom(address(this), sale.from, _tokenId);
         _removeFromSaleList(_nftContractAddress, _tokenId);
+        emit Canceled(sale.nftContractAddress, sale.from, sale.tokenId, sale.price);
     }
 
     function onERC721Received(
@@ -64,6 +76,7 @@ contract Chocoshop is IERC721Receiver {
         uint256 price = abi.decode(_data, (uint256));
         Sale memory sale = Sale(nftContractAddress, payable(_from), _tokenId, price, block.timestamp, block.timestamp);
         _addToSaleList(nftContractAddress, _tokenId, sale);
+        emit OnSale(sale.nftContractAddress, sale.from, sale.tokenId, sale.price);
         return type(IERC721Receiver).interfaceId;
     }
 
