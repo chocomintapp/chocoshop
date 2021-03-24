@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+import { mainIcon, name } from "../../config.json";
 import { shortenAddress } from "../../modules/util";
 
 import { Button } from "../atoms/Button";
@@ -19,6 +20,7 @@ export const Header: React.FC = () => {
       await connectWallet();
       closeLoadingOverlay();
     } catch (err) {
+      console.log(err);
       closeLoadingOverlay();
       openNotificationToast({ type: "error", text: err.message });
     }
@@ -27,9 +29,14 @@ export const Header: React.FC = () => {
   return (
     <header>
       <div className="relative h-20">
-        <Link to="/">
-          <div className="px-4 py-8 absolute left-0 font-bold">Letters.</div>
-        </Link>
+        <div className="px-4 py-8 absolute left-0 font-bold">
+          <Link to="/">
+            <span>
+              {name}
+              <span className="ml-1">{mainIcon}</span>
+            </span>
+          </Link>
+        </div>
         <div className="px-4 py-6 absolute right-0">
           {!userAddress ? <Button onClick={signIn}>Connect</Button> : <Button>{shortenAddress(userAddress)}</Button>}
         </div>

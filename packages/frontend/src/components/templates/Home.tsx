@@ -11,9 +11,8 @@ export const HomeTemplate: React.FC = () => {
   return (
     <Main>
       <Header />
-      <Hero />
       <Container>
-        <Shop />
+        <Hero />
       </Container>
       <Footer />
     </Main>
