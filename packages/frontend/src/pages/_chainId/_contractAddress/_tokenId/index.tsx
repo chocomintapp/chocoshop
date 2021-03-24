@@ -17,11 +17,18 @@ export const NFT: React.FC = () => {
   React.useEffect(() => {
     if (chainId !== "31337" && chainId !== "137") {
       history.push("/");
+      return;
     }
-    getNFT(chainId, nftContractAddress, tokenId).then(({ metadata, nftContract }) => {
-      setMetadata(metadata);
-      setNftContract(nftContract);
-    });
+    getNFT(chainId, nftContractAddress, tokenId)
+      .then(({ metadata, nftContract }) => {
+        setMetadata(metadata);
+        setNftContract(nftContract);
+      })
+      .catch((err) => {
+        console.log(err);
+        history.push("/");
+        return;
+      });
   });
 
   return nftContract && metadata ? <NFTTemplate metadata={metadata} nftContract={nftContract} /> : <></>;

@@ -18,3 +18,12 @@ export interface Metadata {
   image: string;
   animationUrl: string;
 }
+
+export interface Sale {
+  nftContractAddress: string;
+  tokenId: number;
+  from: string;
+  price: string;
+  createdAt: string;
+  updatedAt: string;
+}

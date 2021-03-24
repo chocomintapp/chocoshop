@@ -1,3 +1,5 @@
 // export const HAS_SECONRARY_SALE_FEES = 0xb7799584;
 // export const ERC721_INTERFACE_ID = 0x80ac58cd;
 // export const ERC721_METADATA_INTERFACE_ID = 0x5b5e139f;
+
+export const MINT_FIXTURES_TO = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";

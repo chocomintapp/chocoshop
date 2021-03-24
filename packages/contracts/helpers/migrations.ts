@@ -3,6 +3,7 @@ import * as path from "path";
 import hre, { ethers } from "hardhat";
 
 import networks from "../networks.json";
+import { MINT_FIXTURES_TO } from "./constants";
 import { NetworkName } from "./types";
 
 export const filePath = "../networks.json";
@@ -25,5 +26,21 @@ export const deployChocoshop = async () => {
   });
   networkName != "localhost" && console.log(contractName, "deployed at", contract.address);
   updateJson(contractName, contract.address);
+  return contract;
+};
+
+export const prepareFixtures = async () => {
+  const contractName = "MockNft";
+  const Contract = await ethers.getContractFactory(contractName);
+  const contract = await Contract.deploy({
+    gasPrice,
+  });
+  networkName != "localhost" && console.log(contractName, "deployed at", contract.address);
+  updateJson(contractName, contract.address);
+  await contract.mint(MINT_FIXTURES_TO);
+  await contract.mint(MINT_FIXTURES_TO);
+  await contract.mint(MINT_FIXTURES_TO);
+  await contract.mint(MINT_FIXTURES_TO);
+  await contract.mint(MINT_FIXTURES_TO);
   return contract;
 };

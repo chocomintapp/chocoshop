@@ -84,6 +84,7 @@ export const useWallet = () => {
     const web3 = await getWeb3(provider);
     const signer = await getEthersSigner(provider);
     const signerAddress = await signer.getAddress();
+    setSignerAddressState(signerAddress);
     return { web3, signer, signerAddress };
   };
 

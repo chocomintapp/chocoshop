@@ -1,7 +1,10 @@
 import React from "react";
+import { ChainId } from "../../../../contracts/helpers/types";
 import { shortenText } from "../../modules/util";
+import { getContractsForChainId } from "../../modules/web3";
 import { Metadata, NFTContract } from "../../types";
 import { Button } from "../atoms/Button";
+import { FormInput } from "../molecules/FormInput";
 import { Shares } from "../molecules/Shares";
 
 export interface NFT {
@@ -10,8 +13,14 @@ export interface NFT {
 }
 
 export const NFT: React.FC<NFT> = ({ metadata, nftContract }) => {
+  const [inputPrice, setInputPrice] = React.useState("");
+
   const buy = () => {
-    console.log(buy);
+    const { chocoshopContract, explore, provider } = getContractsForChainId(nftContract.chainId as ChainId);
+  };
+
+  const sell = () => {
+    const { chocoshopContract, explore, provider } = getContractsForChainId(nftContract.chainId as ChainId);
   };
 
   return (
@@ -32,11 +41,25 @@ export const NFT: React.FC<NFT> = ({ metadata, nftContract }) => {
               <p className="text-lg text-gray-500 font-medium">Buy Price</p>
               <p className="text-2xl sm:text-3xl text-gray-700 font-medium">PRICE</p>
             </div>
+            <div>
+              <p className="text-lg text-gray-500 font-medium">Sell Price</p>
+              <FormInput value={inputPrice} setState={setInputPrice} type="number" placeholder="MATIC" />
+            </div>
           </div>
           <div className="mb-4">
             <div className="grid grid-cols-2 space-x-2">
               <Button onClick={buy}>
                 <div className="flex justify-center items-center">Buy</div>
+              </Button>
+            </div>
+            <div className="grid grid-cols-2 space-x-2">
+              <Button onClick={buy}>
+                <div className="flex justify-center items-center">Sell</div>
+              </Button>
+            </div>
+            <div className="grid grid-cols-2 space-x-2">
+              <Button onClick={buy}>
+                <div className="flex justify-center items-center">Cancel</div>
               </Button>
             </div>
           </div>

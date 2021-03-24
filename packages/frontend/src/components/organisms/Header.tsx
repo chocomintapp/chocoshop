@@ -20,7 +20,6 @@ export const Header: React.FC = () => {
       await connectWallet();
       closeLoadingOverlay();
     } catch (err) {
-      console.log(err);
       closeLoadingOverlay();
       openNotificationToast({ type: "error", text: err.message });
     }

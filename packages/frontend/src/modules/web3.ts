@@ -3,16 +3,11 @@ import { ethers } from "ethers";
 import Web3 from "web3";
 import Web3Modal from "web3modal";
 import { abi as chocoshopAbi } from "../../../contracts/artifacts/contracts/Chocoshop.sol/Chocoshop.json";
+import { abi as erc721Abi } from "../../../contracts/artifacts/contracts/mock/MockNFT.sol/MockNft.json";
 import chainIdConfig from "../../../contracts/chainIds.json";
 import { NetworkName, ChainId } from "../../../contracts/helpers/types";
 import networkConfig from "../../../contracts/networks.json";
-import { Chocoshop } from "../../../contracts/typechain";
-
-export const chainIdLabels =
-  process.env.NODE_ENV == "development" ? ["Local", "Rinkeby", "Mainnet", "Matic", "BSC"] : ["Mainnet", "Matic", "BSC"];
-
-export const chainIdValues =
-  process.env.NODE_ENV == "development" ? ["31337", "4", "1", "137", "56"] : ["1", "137", "56"];
+import { Chocoshop, MockNft } from "../../../contracts/typechain";
 
 export const providerOptions = {
   walletconnect: {
@@ -55,6 +50,14 @@ export const getContractsForChainId = (chainId: ChainId) => {
   const networkName = getNetworkNameFromChainId(chainId);
   const { chocoshop, rpc, explore } = networkConfig[networkName];
   const provider = new ethers.providers.JsonRpcProvider(rpc);
+
   const chocoshopContract = new ethers.Contract(chocoshop, chocoshopAbi, provider) as Chocoshop;
-  return { chocoshopContract, explore, provider };
+
+  // this takes null address because it requires address from path
+  const erc721Contract = new ethers.Contract(
+    "0x0000000000000000000000000000000000000000",
+    erc721Abi,
+    provider
+  ) as MockNft;
+  return { chocoshopContract, erc721Contract, explore, provider };
 };

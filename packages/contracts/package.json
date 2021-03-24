@@ -9,7 +9,7 @@
     "test": "hardhat test",
     "gas-report": "env ENABLE_GAS_REPORT=1 yarn test",
     "run-localchain": "yarn hardhat node",
-    "deploy-contract-to-localchain": "hardhat run scripts/0_deployChocoshop.ts --network localhost",
+    "deploy-contract-to-localchain": "hardhat run scripts/0_deployChocoshop.ts --network localhost && hardhat run scripts/99_prepareFixtures.ts --network localhost",
     "deploy-contract-to-matic": "hardhat run scripts/0_deployChocoshop.ts --network matic"
   },
   "devDependencies": {
