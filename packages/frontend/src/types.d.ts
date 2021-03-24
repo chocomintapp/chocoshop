@@ -1,6 +1,20 @@
-export interface Letter {
-  token_id: string;
+export interface NFTContract {
+  chainId: string;
+  factoryAddress: string;
+  moldAddress: string;
+  nftContractAddress: string;
   name: string;
-  image_data: string;
-  from: number;
+  symbol: string;
+  ownerAddress: string;
+  signature: string;
+}
+
+export interface Metadata {
+  chainId: string;
+  nftContractAddress: string;
+  tokenId: number;
+  name: string;
+  description: string;
+  image: string;
+  animationUrl: string;
 }

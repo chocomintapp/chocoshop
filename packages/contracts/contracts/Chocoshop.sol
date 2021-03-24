@@ -9,6 +9,7 @@ import "hardhat/console.sol";
 
 contract Chocoshop is IERC721Receiver {
     struct Sale {
+        address nftContractAddress;
         address payable from;
         uint256 tokenId;
         uint256 price;
@@ -60,7 +61,7 @@ contract Chocoshop is IERC721Receiver {
         require(!isExist(nftContractAddress, _tokenId), "already on sale");
         require(IERC721(nftContractAddress).ownerOf(_tokenId) == address(this), "nft is not transferred");
         uint256 price = abi.decode(_data, (uint256));
-        Sale memory sale = Sale(payable(_from), _tokenId, price, block.timestamp, block.timestamp);
+        Sale memory sale = Sale(nftContractAddress, payable(_from), _tokenId, price, block.timestamp, block.timestamp);
         _addToSaleList(nftContractAddress, _tokenId, sale);
         return type(IERC721Receiver).interfaceId;
     }
