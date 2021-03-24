@@ -27,14 +27,49 @@ describe("Letters", function () {
 
   it("purchase", async function () {
     const value = "10000";
-    await mockNftContract.mint(seller.address);
-    await mockNftContract["safeTransferFrom(address,address,uint256,bytes)"](
-      seller.address,
-      shopContract.address,
-      firstTokenId,
-      ethers.utils.defaultAbiCoder.encode(["uint256"], [value])
-    );
+    await mockNftContract.connect(seller).mint(seller.address);
+    await mockNftContract
+      .connect(seller)
+      ["safeTransferFrom(address,address,uint256,bytes)"](
+        seller.address,
+        shopContract.address,
+        firstTokenId,
+        ethers.utils.defaultAbiCoder.encode(["uint256"], [value])
+      );
     await shopContract.connect(buyer).purchase(mockNftContract.address, firstTokenId, { value });
     expect(await mockNftContract.ownerOf(firstTokenId)).to.equal(buyer.address);
+  });
+
+  it("cancel", async function () {
+    const value = "10000";
+    await mockNftContract.connect(seller).mint(seller.address);
+    await mockNftContract
+      .connect(seller)
+      ["safeTransferFrom(address,address,uint256,bytes)"](
+        seller.address,
+        shopContract.address,
+        firstTokenId,
+        ethers.utils.defaultAbiCoder.encode(["uint256"], [value])
+      );
+    await shopContract.connect(seller).cancel(mockNftContract.address, firstTokenId);
+    expect(await mockNftContract.ownerOf(firstTokenId)).to.equal(seller.address);
+  });
+
+  it("update", async function () {
+    const value = "10000";
+    const updatedValue = "10001";
+    await mockNftContract.connect(seller).mint(seller.address);
+    await mockNftContract
+      .connect(seller)
+      ["safeTransferFrom(address,address,uint256,bytes)"](
+        seller.address,
+        shopContract.address,
+        firstTokenId,
+        ethers.utils.defaultAbiCoder.encode(["uint256"], [value])
+      );
+    await shopContract.connect(seller).update(mockNftContract.address, firstTokenId, updatedValue);
+    const saleKey = await shopContract.getSaleKey(mockNftContract.address, firstTokenId);
+    const sale = await shopContract.getSale(saleKey);
+    expect(sale.price).to.equal(updatedValue);
   });
 });
