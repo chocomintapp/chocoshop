@@ -5,6 +5,8 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 import "./extentions/IHasSecondarySaleFees.sol";
 
+import "hardhat/console.sol";
+
 contract Chocoshop is IERC721Receiver {
     struct Sale {
         address nftContractAddress;
@@ -40,11 +42,11 @@ contract Chocoshop is IERC721Receiver {
         bytes calldata _data
     ) public override returns (bytes4) {
         //TODO: validation
-
         address nftContractAddress = msg.sender;
         bytes32 hashedNft = hashNft(nftContractAddress, _tokenId);
         uint256 price = abi.decode(_data, (uint256));
         Sale memory sale = Sale(nftContractAddress, payable(_from), _tokenId, price);
         sales[hashedNft] = sale;
+        return type(IERC721Receiver).interfaceId;
     }
 }
