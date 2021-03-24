@@ -46,7 +46,7 @@ export const getNetworkNameFromChainId = (chainId: string): NetworkName => {
   return chainIdConfig[chainId as ChainId] as NetworkName;
 };
 
-export const getContractsForChainId = (chainId: ChainId) => {
+export const getContractsForChainId = (chainId: string) => {
   const networkName = getNetworkNameFromChainId(chainId);
   const { chocoshop, rpc, explore } = networkConfig[networkName];
   const provider = new ethers.providers.JsonRpcProvider(rpc);

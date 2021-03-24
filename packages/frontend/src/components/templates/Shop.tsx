@@ -13,13 +13,11 @@ export interface ShopTemplateProps {
 }
 
 export const ShopTemplate: React.FC<ShopTemplateProps> = ({ metadataList, nftContract }) => {
-  console.log(metadataList, nftContract);
-
   return (
     <Main>
       <Header />
       <Container>
-        <Shop metadataList={metadataList} />
+        <Shop metadataList={metadataList} nftContract={nftContract} />
       </Container>
       <Footer />
     </Main>

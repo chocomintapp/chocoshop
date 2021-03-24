@@ -40,7 +40,5 @@ export const prepareFixtures = async () => {
   await contract.mint(MINT_FIXTURES_TO);
   await contract.mint(MINT_FIXTURES_TO);
   await contract.mint(MINT_FIXTURES_TO);
-  await contract.mint(MINT_FIXTURES_TO);
-  await contract.mint(MINT_FIXTURES_TO);
   return contract;
 };
