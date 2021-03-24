@@ -26,6 +26,7 @@ contract Chocoshop is IERC721Receiver {
     }
 
     function getSale(address _nftContractAddress, uint256 _tokenId) public view returns (Sale memory) {
+        require(isExist(_nftContractAddress, _tokenId), "not on sale");
         uint256 index = _salesIndex[_nftContractAddress][_tokenId];
         return _salesMemory[_nftContractAddress][index];
     }

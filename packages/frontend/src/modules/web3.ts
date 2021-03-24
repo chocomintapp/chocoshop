@@ -42,8 +42,8 @@ export const getWeb3 = async (provider: any) => {
   return new Web3(provider);
 };
 
-export const getNetworkNameFromChainId = (chainId: ChainId): NetworkName => {
-  return chainIdConfig[chainId] as NetworkName;
+export const getNetworkNameFromChainId = (chainId: string): NetworkName => {
+  return chainIdConfig[chainId as ChainId] as NetworkName;
 };
 
 export const getContractsForChainId = (chainId: ChainId) => {
