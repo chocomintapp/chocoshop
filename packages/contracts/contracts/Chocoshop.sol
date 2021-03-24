@@ -34,7 +34,7 @@ contract Chocoshop is IERC721Receiver {
     }
 
     function onERC721Received(
-        address _operator,
+        address,
         address _from,
         uint256 _tokenId,
         bytes calldata _data
