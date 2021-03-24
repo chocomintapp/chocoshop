@@ -43,7 +43,7 @@ export const NFT: React.FC<NFT> = ({ metadata, nftContract, sale, owner }) => {
     const { chocoshopContract, explore, provider } = getContractsForChainId(nftContract.chainId as ChainId);
     await chocoshopContract
       .connect(signer)
-      .purchase(nftContract.nftContractAddress, metadata.tokenId, { value: sale.price });
+      .purchase(nftContract.nftContractAddress, (metadata as any).token_id, { value: sale.price });
   };
 
   const cancel = async () => {
@@ -52,13 +52,16 @@ export const NFT: React.FC<NFT> = ({ metadata, nftContract, sale, owner }) => {
     }
     const { signerAddress, signer } = await connectWallet();
     const { chocoshopContract, explore, provider } = getContractsForChainId(nftContract.chainId as ChainId);
-    await chocoshopContract.connect(signer).cancel(nftContract.nftContractAddress, metadata.tokenId);
+    await chocoshopContract.connect(signer).cancel(nftContract.nftContractAddress, (metadata as any).token_id);
   };
 
   const sell = async () => {
+    console.log(metadata);
+    console.log("sell");
     const { chocoshopContract, erc721Contract, explore, provider } = getContractsForChainId(
       nftContract.chainId as ChainId
     );
+    console.log(chocoshopContract, erc721Contract, explore, provider);
     const { signerAddress, signer } = await connectWallet();
     const signerNetwork = await signer.provider.getNetwork();
     if (nftContract.chainId != signerNetwork.chainId.toString()) {
@@ -66,6 +69,7 @@ export const NFT: React.FC<NFT> = ({ metadata, nftContract, sale, owner }) => {
       openNotificationToast({ type: "error", text: `Please connect ${networkName} network` });
       return;
     }
+
     const value = ethers.utils.parseEther(inputPrice).toString();
 
     await erc721Contract
@@ -74,7 +78,7 @@ export const NFT: React.FC<NFT> = ({ metadata, nftContract, sale, owner }) => {
       ["safeTransferFrom(address,address,uint256,bytes)"](
         signerAddress,
         chocoshopContract.address,
-        metadata.tokenId,
+        (metadata as any).token_id,
         ethers.utils.defaultAbiCoder.encode(["uint256"], [value])
       );
   };
@@ -97,7 +101,9 @@ export const NFT: React.FC<NFT> = ({ metadata, nftContract, sale, owner }) => {
               <>
                 <div>
                   <p className="text-lg text-gray-500 font-medium">Price</p>
-                  <p className="text-2xl sm:text-3xl text-gray-700 font-medium">{sale.price}</p>
+                  <p className="text-2xl sm:text-3xl text-gray-700 font-medium">
+                    {sale.price && ethers.utils.formatEther(sale.price)}
+                  </p>
                 </div>
               </>
             ) : (

@@ -25,15 +25,19 @@ export const Shop: React.FC = () => {
     if (chainId !== "31337" && chainId !== "137") {
       history.push("/");
     }
-    openLoadingOverlay();
     const { erc721Contract, provider } = getContractsForChainId(chainId);
     getShop(chainId, nftContractAddress).then(({ metadataList, nftContract }) => {
+      console.log(metadataList, nftContract);
+      if (!metadataList || !nftContract) {
+        history.push("/");
+        return;
+      }
+      openLoadingOverlay();
       setNftContract(nftContract);
-
       provider.getCode(nftContractAddress).then((code: string) => {
         const deployed = code != "0x";
         setDeployed(deployed);
-        const promises = metadataList.map((metadata) => {
+        const promises = metadataList.map((metadata: any) => {
           return erc721Contract
             .attach(nftContractAddress)
             .ownerOf(metadata.tokenId)
@@ -48,12 +52,12 @@ export const Shop: React.FC = () => {
             })
             .filter((item) => item != undefined) as string[];
           const mintedMetadata = metadataList
-            .map((metadata) => {
+            .map((metadata: any) => {
               if (mintedTokenIds.includes(metadata.tokenId.toString())) {
                 return metadata;
               }
             })
-            .filter((item) => item != undefined) as Metadata[];
+            .filter((item: any) => item != undefined) as Metadata[];
           setMetadataList(mintedMetadata);
           finishLoading();
         });

@@ -3,13 +3,15 @@ import axios from "axios";
 // console.log(axios);
 import mock from "../__fixtures__/mock.api.json";
 
-const isMock = process.env.NODE_ENV == "development";
+const isMock = false; //process.env.NODE_ENV == "development";
 
 export const getShop = async (chainID: string, nftContractAddress: string) => {
   if (isMock) {
     return { metadataList: mock.metadata, nftContract: mock.nftContract };
   } else {
-    return { metadataList: mock.metadata, nftContract: mock.nftContract };
+    const response = await axios.get(`https://factory.chocomint.app/metadata/${chainID}/${nftContractAddress}`);
+    const { metadata, contract } = response.data;
+    return { metadataList: metadata, nftContract: contract };
   }
 };
 
@@ -17,6 +19,11 @@ export const getNFT = async (chainID: string, nftContractAddress: string, tokenI
   if (isMock) {
     return { metadata: mock.metadata[0], nftContract: mock.nftContract };
   } else {
-    return { metadata: mock.metadata[0], nftContract: mock.nftContract };
+    const contractResponse = await axios.get(`https://factory.chocomint.app/metadata/${chainID}/${nftContractAddress}`);
+    const { contract } = contractResponse.data;
+    const metadataResponse = await axios.get(
+      `https://factory.chocomint.app/metadata/${chainID}/${nftContractAddress}/${tokenId}`
+    );
+    return { metadata: metadataResponse.data, nftContract: contract };
   }
 };

@@ -3,7 +3,7 @@
     "chainId": "137",
     "rpc": "https://rpc-mainnet.maticvigil.com/",
     "explore": "https://explorer-mainnet.maticvigil.com/",
-    "chocoshop": "",
+    "chocoshop": "0x88Bd1DFaA5685d2D655d91413B9DE27E0253d965",
     "defaultGasPrice": 1000000000
   },
   "localhost": {
