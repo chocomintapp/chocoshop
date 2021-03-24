@@ -4,7 +4,7 @@ import { Button } from "../atoms/Button";
 export const Hero: React.FC = () => {
   return (
     <section>
-      <div className="w-full ">
+      <div className="w-full">
         <div className="flex flex-col items-center mx-auto">
           <img className="h-80" src="/img/hero.png" />
           <p className="text-secondary text-xs mb-8">Creating NFT Shop for every NFT creator & artist!</p>
