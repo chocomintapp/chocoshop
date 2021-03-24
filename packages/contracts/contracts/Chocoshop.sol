@@ -13,9 +13,11 @@ contract Chocoshop is IERC721Receiver {
         address payable from;
         uint256 tokenId;
         uint256 price;
+        uint256 updatedAt;
     }
 
     Sale[] private _salesMemory;
+    mapping(bytes32 => bool) private _salesExists;
     mapping(bytes32 => uint256) private _salesIndex;
 
     function getSale(uint256 _index) public view returns (Sale memory) {
@@ -31,17 +33,39 @@ contract Chocoshop is IERC721Receiver {
     }
 
     function purchase(address _nftContractAddress, uint256 _tokenId) public payable {
-        console.log("1");
         bytes32 saleKey = getSaleKey(_nftContractAddress, _tokenId);
+        require(_salesExists[saleKey], "not on sale");
         uint256 index = _salesIndex[saleKey];
-        console.log("2");
         Sale memory sale = _salesMemory[index];
         require(msg.value == sale.price, "invalid msg value");
-        console.log("3");
         _removeFromSaleList(saleKey);
-        console.log("4");
         IERC721(_nftContractAddress).transferFrom(address(this), msg.sender, _tokenId);
         sale.from.transfer(sale.price);
+    }
+
+    function update(
+        address _nftContractAddress,
+        uint256 _tokenId,
+        uint256 _price
+    ) public {
+        bytes32 saleKey = getSaleKey(_nftContractAddress, _tokenId);
+        require(_salesExists[saleKey], "not on sale");
+        uint256 index = _salesIndex[saleKey];
+        Sale memory sale = _salesMemory[index];
+        require(sale.from == msg.sender, "invalid msg sender");
+        sale.price = _price;
+        sale.updatedAt = block.timestamp;
+        _salesMemory[index] = sale;
+    }
+
+    function cancel(address _nftContractAddress, uint256 _tokenId) public {
+        bytes32 saleKey = getSaleKey(_nftContractAddress, _tokenId);
+        require(_salesExists[saleKey], "not on sale");
+        uint256 index = _salesIndex[saleKey];
+        Sale memory sale = _salesMemory[index];
+        require(sale.from == msg.sender, "invalid msg sender");
+        IERC721(_nftContractAddress).transferFrom(address(this), sale.from, _tokenId);
+        _removeFromSaleList(saleKey);
     }
 
     function onERC721Received(
@@ -50,18 +74,11 @@ contract Chocoshop is IERC721Receiver {
         uint256 _tokenId,
         bytes calldata _data
     ) public override returns (bytes4) {
-        console.log("a");
         address nftContractAddress = msg.sender;
         bytes32 saleKey = getSaleKey(nftContractAddress, _tokenId);
-        uint256 index = _salesIndex[saleKey];
-        if (index > 0) {
-            require(_salesMemory[index].nftContractAddress == address(0x0), "already on sale");
-        }
-        console.log("b-2");
+        require(!_salesExists[saleKey], "already on sale");
         uint256 price = abi.decode(_data, (uint256));
-        console.log("c");
-        Sale memory sale = Sale(nftContractAddress, payable(_from), _tokenId, price);
-        console.log("d");
+        Sale memory sale = Sale(nftContractAddress, payable(_from), _tokenId, price, block.timestamp);
         _addToSaleList(saleKey, sale);
         return type(IERC721Receiver).interfaceId;
     }
@@ -70,6 +87,7 @@ contract Chocoshop is IERC721Receiver {
         uint256 allShopLength = _salesMemory.length;
         _salesIndex[_key] = allShopLength;
         _salesMemory.push(_sale);
+        _salesExists[_key] = true;
     }
 
     function _removeFromSaleList(bytes32 _key) internal {
@@ -78,6 +96,7 @@ contract Chocoshop is IERC721Receiver {
         Sale memory lastSale = _salesMemory[lastSalesIndex];
         _salesMemory[removingSalesIndex] = lastSale;
         delete _salesIndex[_key];
+        _salesExists[_key] = false;
         _salesMemory.pop();
     }
 }
