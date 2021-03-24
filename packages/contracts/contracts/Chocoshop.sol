@@ -77,6 +77,7 @@ contract Chocoshop is IERC721Receiver {
         address nftContractAddress = msg.sender;
         bytes32 saleKey = getSaleKey(nftContractAddress, _tokenId);
         require(!_salesExists[saleKey], "already on sale");
+        require(IERC721(nftContractAddress).ownerOf(_tokenId) == address(this), "nft is not transferred");
         uint256 price = abi.decode(_data, (uint256));
         Sale memory sale = Sale(nftContractAddress, payable(_from), _tokenId, price, block.timestamp);
         _addToSaleList(saleKey, sale);
