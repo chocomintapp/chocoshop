@@ -1,0 +1,16 @@
+{
+  "matic": {
+    "chainId": "137",
+    "rpc": "https://rpc-mainnet.maticvigil.com/",
+    "explore": "https://explorer-mainnet.maticvigil.com/",
+    "chocoshop": "",
+    "defaultGasPrice": 1000000000
+  },
+  "localhost": {
+    "chainId": "31337",
+    "rpc": "http://localhost:8545",
+    "explore": "https://rinkeby.etherscan.io/",
+    "chocoshop": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+    "defaultGasPrice": 1000000000
+  }
+}

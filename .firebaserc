@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "shops-prod"
+  },
+  "targets": {
+    "shops-prod": {
+      "hosting": {
+        "production": [
+          "shops-prod"
+        ]
+      }
+    }
+  }
+}
